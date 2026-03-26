@@ -38,7 +38,7 @@ export default function AutoPlaySequence({
     const handleResize = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
-      const dpr = window.devicePixelRatio || 2; 
+      const dpr = Math.max(window.devicePixelRatio || 2, 2);
       const rect = parent.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -53,16 +53,16 @@ export default function AutoPlaySequence({
 
       const dpr = window.devicePixelRatio || 2;
       const rect = canvas.parentElement!.getBoundingClientRect();
-      
+
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Deep white #FFFFFF explicitly forces "mix-blend-multiply" at the parent level to perfectly delete this background mapping, isolating the black sequence figurine layout perfectly!
-      ctx.fillStyle = "#4a4a4a";
+      // High quality image rendering
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      ctx.fillStyle = "#5a5656";
       ctx.fillRect(0, 0, rect.width, rect.height);
 
-      // Mobile first Object `cover` implementation strictly mapped directly in 2D hardware context
-      // Automatically crops arbitrary 16:9 sidebars/watermarks out of frame!
-      // Automatically mapping to native boundary layer tracking seamlessly against the taupe background matching
       const hRatio = rect.width / img.width;
       const vRatio = rect.height / img.height;
       const ratio = Math.max(hRatio, vRatio);
@@ -127,7 +127,7 @@ export default function AutoPlaySequence({
       {/* Feathered edges to blend image into background */}
       <div className="absolute inset-[-2px] z-10 pointer-events-none"
         style={{
-          boxShadow: 'inset 0 0 100px 80px #4a4a4a, inset 0 0 40px 20px #4a4a4a',
+          boxShadow: 'inset 0 0 100px 80px #5a5656, inset 0 0 40px 20px #5a5656',
         }}
       />
 
