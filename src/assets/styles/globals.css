@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --color-gold: #C5A059;
+  --color-gold-light: #E5C185;
+  --color-bg-warm: #080808;
+}
+
+@layer base {
+  body {
+    @apply text-white/90 font-sans antialiased selection:bg-white/20 selection:text-white;
+    min-height: 100vh;
+    background: #4a4a4a;
+    scroll-snap-type: y proximity;
+    overflow-y: auto;
+  }
+}
+
+.gold-text {
+  /* Engraved gold text effect */
+  background-color: #C5A059;
+
+  /* Bright gold texture with metallic gradient + animated shine */
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.6'/%3E%3C/svg%3E"),
+    linear-gradient(120deg, transparent 0%, transparent 35%, rgba(255, 235, 180, 0.5) 45%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 235, 180, 0.5) 55%, transparent 65%, transparent 100%),
+    linear-gradient(110deg, #9C7942 0%, #E3CDA9 25%, #C5A059 50%, #E5C185 75%, #9C7942 100%);
+  background-blend-mode: overlay, normal, normal;
+  background-size: 100% 100%, 300% 100%, 100% 100%;
+  animation: gold-shine 4s ease-in-out infinite;
+
+  /* Clip the textured background into the text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+
+  /* Gold glow text shadow */
+  filter:
+    drop-shadow(0 0 8px rgba(197, 160, 89, 0.4))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.gold-border {
+  border: 1px solid #C5A059;
+}
+
+.glass-card {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+@keyframes gold-shine {
+  0% {
+    background-position: 0% 0%, -100% 0%, 0% 0%;
+  }
+  50% {
+    background-position: 0% 0%, 200% 0%, 0% 0%;
+  }
+  100% {
+    background-position: 0% 0%, -100% 0%, 0% 0%;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(30px);
+    opacity: 0;
+  }
+}
+
+.animate-snowfall {
+  animation: snowfall linear infinite;
+}
+
+@keyframes glitter {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.2) rotate(90deg);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.8) rotate(180deg);
+  }
+  75% {
+    opacity: 0.9;
+    transform: scale(1) rotate(270deg);
+  }
+}
+
+.animate-glitter {
+  animation: glitter ease-in-out infinite;
+}
