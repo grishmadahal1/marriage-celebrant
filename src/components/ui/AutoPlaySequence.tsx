@@ -60,7 +60,7 @@ export default function AutoPlaySequence({
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
 
-      ctx.fillStyle = "#5a5656";
+      ctx.fillStyle = "#4a4646";
       ctx.fillRect(0, 0, rect.width, rect.height);
 
       const hRatio = rect.width / img.width;
@@ -127,7 +127,7 @@ export default function AutoPlaySequence({
       {/* Feathered edges to blend image into background */}
       <div className="absolute inset-[-2px] z-10 pointer-events-none"
         style={{
-          boxShadow: 'inset 0 0 100px 80px #5a5656, inset 0 0 40px 20px #5a5656',
+          boxShadow: 'inset 0 0 100px 80px #4a4646, inset 0 0 40px 20px #4a4646',
         }}
       />
 

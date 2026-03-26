@@ -26,7 +26,7 @@ const steps = [
 
 export default function ProcessSection() {
   return (
-    <section data-cloud-cursor className="min-h-screen flex items-center justify-center" style={{ cursor: "none" }}>
+    <section id="process" data-cloud-cursor className="min-h-screen flex items-center justify-center" style={{ cursor: "none" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-16 w-full">
         <div className="flex flex-col md:flex-row gap-20 lg:gap-32 items-start">
 

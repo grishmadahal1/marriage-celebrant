@@ -32,7 +32,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center scroll-mt-0" style={{ scrollSnapAlign: "start" }}>
+    <section id="contact" className="min-h-screen flex items-center justify-center scroll-mt-0" style={{ scrollSnapAlign: "start" }}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-16 w-full">
         <div className="flex flex-col md:flex-row gap-12 lg:gap-20 items-center justify-center">
 

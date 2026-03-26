@@ -10,6 +10,7 @@ import ServicesSection from "./components/sections/ServicesSection";
 import ContactSection from "./components/sections/ContactSection";
 import Footer from "./components/layout/Footer";
 import CloudCursor from "./components/ui/CloudCursor";
+import SideNav from "./components/layout/SideNav";
 
 
 export default function App() {
@@ -20,7 +21,7 @@ export default function App() {
       <div className="max-w-[1440px] mx-auto w-full flex flex-col flex-1 px-6 lg:px-16">
         <Navigation />
 
-        <main className="flex-1 flex flex-col md:flex-row items-center justify-between w-full py-8 md:py-16 gap-12 md:gap-0 relative">
+        <main id="home" className="flex-1 flex flex-col md:flex-row items-center justify-between w-full py-8 md:py-16 gap-12 md:gap-0 relative">
 
           <HeroDisplay />
 
@@ -113,6 +114,7 @@ export default function App() {
 
       <FloatingOrb />
       <CloudCursor />
+      <SideNav />
 
       {/* Ambient atmosphere — fog & sun glow */}
       <motion.div

@@ -345,7 +345,7 @@ export default function ServicesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden pt-32 pb-12" style={{ scrollSnapAlign: "start" }}>
+    <section id="services" ref={sectionRef} className="relative overflow-hidden pt-32 pb-12" style={{ scrollSnapAlign: "start" }}>
       {isVisible && <SnowEffect />}
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-16 w-full relative z-10">
