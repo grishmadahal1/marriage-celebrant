@@ -90,12 +90,19 @@ function SnowEffect() {
   );
 }
 
-// Letter positions when envelope is open — fan out like the Folder component
-const letterTransforms = [
+// Letter positions when envelope is open — fan out (smaller spread on mobile)
+const letterTransformsDesktop = [
   { x: "-110%", y: "-60%", rotate: -12 },
   { x: "-35%", y: "-85%", rotate: -4 },
   { x: "35%",  y: "-85%", rotate: 4 },
   { x: "110%", y: "-60%", rotate: 12 },
+];
+
+const letterTransformsMobile = [
+  { x: "-70%", y: "-55%", rotate: -10 },
+  { x: "-20%", y: "-75%", rotate: -3 },
+  { x: "20%",  y: "-75%", rotate: 3 },
+  { x: "70%", y: "-55%", rotate: 10 },
 ];
 
 function EnvelopeCards({
@@ -110,6 +117,16 @@ function EnvelopeCards({
   flyOffset: { x: number; y: number };
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const letterTransforms = isMobile ? letterTransformsMobile : letterTransformsDesktop;
 
   const handleEnvelopeClick = () => {
     if (activeLetter !== null) return;
@@ -124,7 +141,7 @@ function EnvelopeCards({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative" style={{ width: 400, height: 260 }}>
+      <div className="relative w-[280px] h-[180px] sm:w-[340px] sm:h-[220px] md:w-[400px] md:h-[260px]">
 
         {/* Envelope back */}
         <div
@@ -146,31 +163,33 @@ function EnvelopeCards({
               key={feature.title}
               className={`absolute cursor-pointer ${isActive ? "z-[50]" : "z-[2]"}`}
               style={{
-                width: 300,
+                width: "75%",
                 left: "50%",
                 bottom: "15%",
-                marginLeft: -150,
+                transform: "translateX(-50%)",
+                marginLeft: 0,
                 transformOrigin: "bottom center",
               }}
               animate={
                 isActive
-                  ? { x: flyOffset.x, y: flyOffset.y, rotate: 0, scale: 1.15 }
+                  ? isMobile
+                    ? { x: "-50%", y: -280, rotate: 0, scale: 1.05 }
+                    : { x: `calc(-50% + ${flyOffset.x}px)`, y: flyOffset.y, rotate: 0, scale: 1.15 }
                   : isOpen
-                  ? { x: pos.x, y: pos.y, rotate: pos.rotate, scale: 1 }
-                  : { x: 0, y: "10%", rotate: 0, scale: 0.9 }
+                  ? { x: `calc(-50% + ${pos.x})`, y: pos.y, rotate: pos.rotate, scale: 1 }
+                  : { x: "-50%", y: "10%", rotate: 0, scale: 0.9 }
               }
               transition={{ type: "spring", stiffness: 260, damping: 22 }}
               onClick={(e) => handleLetterClick(e, i)}
-              whileHover={isOpen && !isActive ? { scale: 1.08, y: `calc(${pos.y} - 10px)` } : {}}
             >
               {/* Letter card */}
               <div
                 className="rounded-lg overflow-hidden shadow-xl"
                 style={{
-                  background: `linear-gradient(170deg, #f5f0e8 0%, #ede6d8 100%)`,
+                  background: "linear-gradient(170deg, #f5f0e8 0%, #ede6d8 100%)",
                   border: "1px solid rgba(197,160,89,0.2)",
-                  minHeight: isActive ? 280 : 160,
-                  padding: isActive ? "32px 28px" : "20px 22px",
+                  minHeight: isActive ? (isMobile ? 200 : 280) : (isMobile ? 100 : 160),
+                  padding: isActive ? (isMobile ? "20px 16px" : "32px 28px") : (isMobile ? "12px 14px" : "20px 22px"),
                   transition: "min-height 0.3s, padding 0.3s",
                 }}
               >
@@ -183,14 +202,14 @@ function EnvelopeCards({
                 />
 
                 <div className="relative z-[1]">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-4 h-[1px] bg-[#C5A059]/50" />
-                    <span className="text-[9px] tracking-[0.2em] uppercase font-display text-[#C5A059]/60">
+                  <div className="flex items-center gap-2 mb-1 sm:mb-2">
+                    <div className="w-3 sm:w-4 h-[1px] bg-[#C5A059]/50" />
+                    <span className="text-[8px] sm:text-[9px] tracking-[0.2em] uppercase font-display text-[#C5A059]/60">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
 
-                  <h4 className="text-base md:text-lg font-serif font-bold text-[#3a3530] leading-snug">
+                  <h4 className="text-sm sm:text-base md:text-lg font-serif font-bold text-[#3a3530] leading-snug">
                     {feature.title}
                   </h4>
 
@@ -200,11 +219,11 @@ function EnvelopeCards({
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <p className="text-[#6b6156] text-sm leading-relaxed font-serif mt-3">
+                      <p className="text-[#6b6156] text-xs sm:text-sm leading-relaxed font-serif mt-2 sm:mt-3">
                         {feature.description}
                       </p>
-                      <p className="text-[9px] text-[#a09080] mt-4 font-display tracking-wider uppercase">
-                        Click to close
+                      <p className="text-[8px] sm:text-[9px] text-[#a09080] mt-3 sm:mt-4 font-display tracking-wider uppercase">
+                        Tap to close
                       </p>
                     </motion.div>
                   )}
@@ -214,22 +233,19 @@ function EnvelopeCards({
           );
         })}
 
-        {/* Envelope front flap */}
+        {/* Envelope front flap — uses % width so it scales */}
         <motion.div
-          className="absolute inset-x-0 top-0 z-[3] cursor-pointer"
-          style={{ transformOrigin: "top center" }}
+          className="absolute inset-x-0 top-0 z-[3] cursor-pointer overflow-hidden"
+          style={{ transformOrigin: "top center", height: "46%" }}
           animate={isOpen ? { rotateX: 180, opacity: 0 } : { rotateX: 0, opacity: 1 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
           onClick={handleEnvelopeClick}
         >
           <div
+            className="w-full h-full"
             style={{
-              width: 0,
-              height: 0,
-              borderLeft: "200px solid transparent",
-              borderRight: "200px solid transparent",
-              borderTop: "120px solid #E5C185",
-              filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))",
+              background: "#E5C185",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             }}
           />
         </motion.div>
@@ -246,25 +262,25 @@ function EnvelopeCards({
         {/* Wax seal */}
         <motion.div
           className="absolute left-1/2 -translate-x-1/2 z-[5] cursor-pointer"
-          style={{ top: 85 }}
+          style={{ top: "32%" }}
           animate={isOpen ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }}
           transition={{ duration: 0.3 }}
           onClick={handleEnvelopeClick}
         >
           <div
-            className="w-11 h-11 rounded-full flex items-center justify-center"
+            className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center"
             style={{
               background: "radial-gradient(circle at 35% 35%, #E5C185, #C5A059, #9C7942)",
               boxShadow: "0 2px 8px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.3)",
             }}
           >
-            <span className="text-[9px] font-display font-bold text-white/90">SC</span>
+            <span className="text-[8px] sm:text-[9px] font-display font-bold text-white/90">SC</span>
           </div>
         </motion.div>
       </div>
 
-      <p className="text-white/70 text-sm mt-8 font-display tracking-wider">
-        {isOpen ? "Click a letter to read" : "Click the envelope to open"}
+      <p className="text-white/70 text-xs sm:text-sm mt-6 sm:mt-8 font-display tracking-wider">
+        {isOpen ? "Tap a letter to read" : "Tap the envelope to open"}
       </p>
     </div>
   );
@@ -289,14 +305,14 @@ function EnvelopeSection({ features }: { features: { title: string; description:
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center mb-32 max-w-5xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-center mb-20 md:mb-32 max-w-5xl mx-auto">
       <motion.div
         ref={leftRef}
         initial={{ opacity: 0, x: -30 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="min-h-[280px] flex items-center"
+        className="min-h-[120px] md:min-h-[280px] flex items-center text-center md:text-left"
       >
         <AnimatePresence mode="wait">
           {activeLetter === null && (
@@ -306,11 +322,12 @@ function EnvelopeSection({ features }: { features: { title: string; description:
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
+              className="w-full"
             >
-              <h3 className="text-3xl md:text-5xl font-display font-medium text-white/90 mb-4 leading-tight">
+              <h3 className="text-2xl sm:text-3xl md:text-5xl font-display font-medium text-white/90 mb-3 md:mb-4 leading-tight">
                 Making Legal <span className="gold-text">Legendary</span>
               </h3>
-              <p className="text-white/50 max-w-md text-lg leading-relaxed">
+              <p className="text-white/50 max-w-md text-base md:text-lg leading-relaxed mx-auto md:mx-0">
                 A celebration, not an obligation.
               </p>
             </motion.div>
@@ -395,7 +412,7 @@ export default function ServicesSection() {
               viewBox="0 0 280 100"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-[260px] mx-auto"
+              className="w-[180px] sm:w-[220px] md:w-[260px] mx-auto"
             >
               {/* "Steven" */}
               <motion.path
